@@ -4,3 +4,6 @@ dist-ssr
 *.local
 .env
 coverage
+
+labPRDPulsePassFrontEnd.md
+PRD_PulsePass_Frontend_React_TypeScript_Tailwind.pdf
