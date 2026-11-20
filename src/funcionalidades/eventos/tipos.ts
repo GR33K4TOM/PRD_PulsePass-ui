@@ -23,9 +23,10 @@ export type EventStatus = z.infer<typeof EventStatusSchema>
 
 export const EventSummaryResponseSchema = z
   .object({
+    id: z.union([z.number(), z.string()]).optional(),
     eventCode: z.string(),
     name: z.string(),
-    category: EventCategorySchema,
+    category: EventCategorySchema.optional().default('MUSIC'),
     eventDate: z.string(),
     status: EventStatusSchema,
     city: z.string().optional(),
@@ -55,10 +56,11 @@ const ArtistaEnEventoSchema = z.union([
 
 export const EventResponseSchema = z
   .object({
+    id: z.union([z.number(), z.string()]).optional(),
     eventCode: z.string(),
     name: z.string(),
     description: z.string().optional().default(''),
-    category: EventCategorySchema,
+    category: EventCategorySchema.optional().default('MUSIC'),
     eventDate: z.string(),
     minimumAge: z.number().optional().default(0),
     status: EventStatusSchema,
