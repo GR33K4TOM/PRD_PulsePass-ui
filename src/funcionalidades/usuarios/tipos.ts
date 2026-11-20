@@ -5,9 +5,9 @@ export const UserResponseSchema = z
     id: z.union([z.number(), z.string()]).optional(),
     username: z.string(),
     email: z.string().email(),
-    firstName: z.string(),
-    lastName: z.string(),
-    birthDate: z.string(),
+    firstName: z.string().optional().default(''),
+    lastName: z.string().optional().default(''),
+    birthDate: z.string().optional().default(''),
     active: z.boolean().optional().default(true),
   })
   .passthrough()
