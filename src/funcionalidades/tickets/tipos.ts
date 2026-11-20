@@ -8,14 +8,18 @@ export type TicketStatus = z.infer<typeof TicketStatusSchema>
 
 export const TicketResponseSchema = z
   .object({
+    id: z.union([z.number(), z.string()]).optional(),
     ticketCode: z.string(),
     type: TicketTypeSchema,
-    price: z.number(),
+    price: z.coerce.number(),
     status: TicketStatusSchema,
-    purchaseDate: z.string(),
+    purchaseDate: z.string().optional().default(''),
+    purchasedAt: z.string().optional(),
+    createdAt: z.string().optional(),
     userEmail: z.string().optional(),
     userFullName: z.string().optional(),
     userName: z.string().optional(),
+    username: z.string().optional(),
     eventCode: z.string().optional(),
     eventName: z.string().optional(),
     user: z
@@ -37,6 +41,11 @@ export const TicketResponseSchema = z
       .optional(),
   })
   .passthrough()
+  .transform((val) => ({
+    ...val,
+    purchaseDate:
+      val.purchaseDate || val.purchasedAt || val.createdAt || new Date().toISOString(),
+  }))
 
 export type TicketResponse = z.infer<typeof TicketResponseSchema>
 export const ListaTicketsSchema = z.array(TicketResponseSchema)
@@ -63,5 +72,12 @@ export function obtenerTitularTicket(ticket: TicketResponse): string {
   if (ticket.user?.firstName || ticket.user?.lastName) {
     return `${ticket.user.firstName ?? ''} ${ticket.user.lastName ?? ''}`.trim()
   }
-  return ticket.userName ?? ticket.user?.username ?? ticket.userEmail ?? ticket.user?.email ?? 'Titular'
+  return (
+    ticket.userName ??
+    ticket.username ??
+    ticket.user?.username ??
+    ticket.userEmail ??
+    ticket.user?.email ??
+    'Titular'
+  )
 }
